@@ -1,0 +1,8 @@
+name: receipt-processor-challenge
+
+services:
+  receipt-processor:
+    container_name: receipt-processor-ian-graves
+    build:
+      context: .
+      dockerfile: ./Dockerfile

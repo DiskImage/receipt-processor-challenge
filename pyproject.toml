@@ -1,0 +1,50 @@
+[project]
+name = "receipt-processor-challenge"
+version = "0.1.0"
+description = "A simple receipt processor"
+authors = [
+    {name = "Ian Graves",email = "ian@iangrav.es"}
+]
+readme = "README.md"
+requires-python = ">=3.12,<=3.13"
+dependencies = [
+    "fastapi[standard] (>=0.115.6,<0.116.0)",
+    "uvicorn (>=0.34.0,<0.35.0)",
+    "pydantic (>=2.10.5,<3.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+package-mode = false
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.3.4"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.10.0"
+
+[tool.black]
+line-length = 88
+required-version = "24.10.0"
+target-version = ["py312"]
+
+[tool.pytest.ini_options]
+env_override_existing_values = true
+pythonpath = ["src"]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = """
+    --verbose
+    --color=yes
+    --strict-markers
+    """
+asyncio_mode = "strict"
+markers = [
+    "wip: A temporary filter to apply to tests while working with them to filter out others",
+]
+
