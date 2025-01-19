@@ -21,7 +21,7 @@ NOT_FOUND_MESSAGE = "No receipt found for that ID."
         status.HTTP_400_BAD_REQUEST: {"description": BAD_REQUEST_MESSAGE},
     },
 )
-async def process_receipt(request: Request, receipt: Receipt):
+def process_receipt(request: Request, receipt: Receipt):
     return Response(status_code=status.HTTP_200_OK)
 
 
@@ -34,7 +34,7 @@ async def process_receipt(request: Request, receipt: Receipt):
         status.HTTP_404_NOT_FOUND: {"description": NOT_FOUND_MESSAGE},
     },
 )
-async def get_receipt_points(
+def get_receipt_points(
     id: Annotated[str, Field(pattern="^\\S+$", description="The ID of the receipt.")]
 ):
     return Response(status_code=status.HTTP_200_OK)

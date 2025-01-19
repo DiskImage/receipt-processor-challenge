@@ -36,14 +36,13 @@ target-version = ["py312"]
 [tool.pytest.ini_options]
 env_override_existing_values = true
 pythonpath = ["src"]
-testpaths = ["tests"]
+testpaths = ["src","tests"]
 python_files = ["test_*.py"]
 addopts = """
     --verbose
     --color=yes
     --strict-markers
     """
-asyncio_mode = "strict"
 markers = [
     "wip: A temporary filter to apply to tests while working with them to filter out others",
 ]
