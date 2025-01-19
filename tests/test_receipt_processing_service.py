@@ -1,29 +1,12 @@
+from unittest.mock import patch
 import pytest
+from uuid import uuid4
 
 from src.models.receipt import Receipt
-from src.services.receipt_processing_service import ReceiptProcessingService
+from src.services.receipt_processing_service import ReceiptNotFound, ReceiptProcessingService
 
-simple_receipt = {
-    "retailer": "Target",
-    "purchaseDate": "2022-01-02",
-    "purchaseTime": "13:13",
-    "total": "1.25",
-    "items": [
-        {"shortDescription": "Pepsi - 12-oz", "price": "1.25"}
-    ]
-}
 
-morning_receipt = {
-    "retailer": "Walgreens",
-    "purchaseDate": "2022-01-02",
-    "purchaseTime": "08:13",
-    "total": "2.65",
-    "items": [
-        {"shortDescription": "Pepsi - 12-oz", "price": "1.25"},
-        {"shortDescription": "Dasani", "price": "1.40"}
-    ]
-}
-
+FIRST_MOCK_ID = "0aeb4aa8-6d78-4b90-92e7-af935afda512"
 FIRST_EXAMPLE = {
   "retailer": "Target",
   "purchaseDate": "2022-01-01",
@@ -50,6 +33,7 @@ FIRST_EXAMPLE = {
 }
 FIRST_EXAMPLE_EXPECTED_POINTS = 28
 
+SECOND_MOCK_ID = "045edd04-8a66-4ba1-bc54-757b7c1bdc3d"
 SECOND_EXAMPLE = {
   "retailer": "M&M Corner Market",
   "purchaseDate": "2022-03-20",
@@ -73,16 +57,29 @@ SECOND_EXAMPLE = {
 }
 SECOND_EXAMPLE_EXPECTED_POINTS = 109
 
-@pytest.mark.parametrize("receipt_data,expected_points", [
-  (FIRST_EXAMPLE, FIRST_EXAMPLE_EXPECTED_POINTS),
-  (SECOND_EXAMPLE, SECOND_EXAMPLE_EXPECTED_POINTS)
+
+
+@pytest.mark.parametrize("mock_receipt_id,receipt_data,expected_points", [
+  (FIRST_MOCK_ID, FIRST_EXAMPLE, FIRST_EXAMPLE_EXPECTED_POINTS),
+  (SECOND_MOCK_ID, SECOND_EXAMPLE, SECOND_EXAMPLE_EXPECTED_POINTS)
 ])
-def test_process_receipt(receipt_data: dict, expected_points: int):
+@patch('src.services.receipt_processing_service.uuid4')
+def test_get_points_for_receipt(mock_uuid4, mock_receipt_id: str, receipt_data: dict, expected_points: int):
+  mock_uuid4.return_value = mock_receipt_id
   service = ReceiptProcessingService()
 
   receipt = Receipt.model_validate(receipt_data)
-  result = service.process_receipt(receipt)
+  service.process_receipt(receipt)
+  try:
+    result = service.get_points_for_receipt(mock_receipt_id)
+  except ReceiptNotFound as e:
+    raise e
 
   assert result == expected_points
 
+def test_get_points_for_receipt_not_found():
+  service = ReceiptProcessingService()
+  id_to_find = str(uuid4())
 
+  with pytest.raises(ReceiptNotFound):
+    _unexpected_points = service.get_points_for_receipt(id=id_to_find)
