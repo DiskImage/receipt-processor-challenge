@@ -1,3 +1,7 @@
+# Please refer to INSTRUCTIONS.md for run instructions, the remainder of this README.md is the original prompt.
+
+
+
 # Receipt Processor
 
 Build a webservice that fulfils the documented API. The API is described below. A formal definition is provided 
