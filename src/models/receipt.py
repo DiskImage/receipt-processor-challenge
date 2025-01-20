@@ -24,7 +24,7 @@ class Receipt(BaseModel):
     purchase_time: Annotated[
         str,
         Field(
-            alias="purchaseDate",
+            alias="purchaseTime",
             description="The time of the purchase printed on the receipt. 24-hour time expected.",
             examples=["13:01"],
         ),
