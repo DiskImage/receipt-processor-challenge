@@ -12,7 +12,8 @@ RUN poetry config virtualenvs.create false \
 
 COPY src/ ./src/
 
+ENV PYTHONPATH=/app
+
 EXPOSE 8000
 
-CMD ["python3", "src/main.py"]
-# CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
